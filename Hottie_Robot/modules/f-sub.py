@@ -30,8 +30,7 @@ def _onUnMuteRequest(client, cb):
         chat_id = cb.message.chat.id
     except:
         return
-    chat_db = sql.fs_settings(chat_id)
-    if chat_db:
+    if chat_db := sql.fs_settings(chat_id):
         channel = chat_db.channel
         try:
             chat_member = client.get_chat_member(chat_id, user_id)
@@ -78,8 +77,7 @@ def _onUnMuteRequest(client, cb):
 @pbot.on_message(filters.text & ~filters.private & ~filters.edited, group=1)
 def _check_member(client, message):
     chat_id = message.chat.id
-    chat_db = sql.fs_settings(chat_id)
-    if chat_db:
+    if chat_db := sql.fs_settings(chat_id):
         try:
             user_id = message.from_user.id
         except:
@@ -120,8 +118,9 @@ def _check_member(client, message):
                         )
                     except ChatAdminRequired:
                         sent_message.edit(
-                            f"❗ **Hottie is not an admin here..**\n__Give me ban permissions and retry.. \n#Ending FSub...__"
+                            "❗ **Hottie is not an admin here..**\\n__Give me ban permissions and retry.. \\n#Ending FSub...__"
                         )
+
                     except RPCError:
                         return
 
@@ -136,17 +135,7 @@ def _check_member(client, message):
             return
 
 
-@pbot.on_message(
-    filters.command(
-        [
-            "forcesubscribe",
-            "forcesub",
-            f"forcesub@Hottie_Robot",
-            f"forcesubscribe@Hottie_Robot",
-        ]
-    )
-    & ~filters.private
-)
+@pbot.on_message((filters.command(["forcesubscribe", "forcesub", "forcesub@Hottie_Robot", "forcesubscribe@Hottie_Robot"]) & ~filters.private))
 def config(client, message):
     user = client.get_chat_member(message.chat.id, message.from_user.id)
     if user.status == "creator":
@@ -203,21 +192,6 @@ def config(client, message):
         )
 
 
-__help__ = f"""
-*Force Subscribe*:
-- Hottie can mute members who are not subscribed your channel until they subscribe
-- When enabled I will mute unsubscribed members and show them a unmute button. When they pressed the button I will unmute them
+__help__ = """\x1f*Force Subscribe*:\x1f- Hottie can mute members who are not subscribed your channel until they subscribe\x1f- When enabled I will mute unsubscribed members and show them a unmute button. When they pressed the button I will unmute them\x1f\x1f*Setup*\x1f1) First of all add me in the group as admin with ban users permission and in the channel as admin.\x1fNote: Only creator of the group can setup me and i will not allow force subscribe again if not done so.\x1f \x1f*Commmands*:\x1f   ❃ `/forcesubscribe`*:* To get the current settings.\x1f   ❃ `/forcesubscribe <no/off/disable>`*:* To turn of ForceSubscribe.\x1f   ❃ `/forcesubscribe <channel username>`*:* To turn on and setup the channel.\x1f   ❃ `/forcesubscribe clear`*:* To unmute all members who muted by me.\x1fNote: /forcesub is an alias of /forcesubscribe\x1f \x1f"""
 
-*Setup*
-1) First of all add me in the group as admin with ban users permission and in the channel as admin.
-Note: Only creator of the group can setup me and i will not allow force subscribe again if not done so.
- 
-*Commmands*:
-   ❃ `/forcesubscribe`*:* To get the current settings.
-   ❃ `/forcesubscribe <no/off/disable>`*:* To turn of ForceSubscribe.
-   ❃ `/forcesubscribe <channel username>`*:* To turn on and setup the channel.
-   ❃ `/forcesubscribe clear`*:* To unmute all members who muted by me.
-Note: /forcesub is an alias of /forcesubscribe
- 
-"""
 __mod_name__ = "F-Sub"
